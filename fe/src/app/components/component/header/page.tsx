@@ -1,31 +1,51 @@
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-} from '@/components/ui/breadcrumb';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHouse } from '@fortawesome/free-solid-svg-icons';
-import Search from './search';
-import Avt from './avt';
-import Menu from './menu';
-import { Logo } from './logo';
+"use client";
+import React, { useState, useEffect } from "react";
+import Search from "./search";
+import Avt from "./avt";
+import Menu from "./menu";
+import { Logo } from "./logo";
+import Nav from "./nav";
+import Time from "./time";
+import classNames from "classnames";
 
-export default function Header() {
-    return (
-        <div className="bg-slate-900 sm:h-[60px] h-[40px] flex justify-between items-center xl:px-[150px] lg:px-[40px] px-[10px] text-white sm:text-[15px] text-[12px]">
-            {/* logo */}
-            <Logo />
+const Header: React.FC = () => {
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
 
-            {/* search */}
-            <Search />
-            {'hhHhHhHhHhhHhHH'}
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 100);
+    };
 
-            {/* avt */}
-            <Avt />
+    window.addEventListener("scroll", handleScroll);
+    // Clean up the event listener on component unmount
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-            {/* menu */}
-            <Menu />
+  return (
+    <div
+      className={classNames(
+        "transition-all duration-300 ease-in-out shadow-md",
+        {
+          " w-screen  fixed top-0 z-50": isScrolled,
+        },
+        "bg-white"
+      )}
+    >
+      <Time />
+      <div className="sm:h-[80px] h-[60px] flex justify-between items-center xl:px-[150px] lg:px-[40px] px-[5px] sm:text-[15px] text-[12px]">
+        <div className="flex items-center">
+          <Logo />
+          <Nav />
         </div>
-    );
-}
+
+        <div className="flex items-center">
+          <Search />
+          <Avt />
+          <Menu />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Header;
